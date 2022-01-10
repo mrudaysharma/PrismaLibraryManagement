@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -38,5 +39,23 @@ public class LibraryManagementController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    @GetMapping("/getUserAtleastBorrowOneBook")
+    public ResponseEntity<List<String>> getUserAtleastBorrowOneBook() {
+        try {
+            List<String> users = libraryManagementService.getUserBorrowedOneBookAtleast();
+            if (users.isEmpty()) {
+                return new ResponseEntity(HttpStatus.NO_CONTENT);
+            } else {
+                LOGGER.info("User List Borrowed Atleast One Book=====>" + users.toString());
+                return new ResponseEntity(users, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            LOGGER.error("Exception: " + e.getMessage() + " No content found in library ");
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }
