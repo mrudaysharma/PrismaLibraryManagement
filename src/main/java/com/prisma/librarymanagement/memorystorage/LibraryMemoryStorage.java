@@ -5,7 +5,6 @@ import com.prisma.librarymanagement.entity.Borrower;
 import com.prisma.librarymanagement.entity.Library;
 import com.prisma.librarymanagement.entity.User;
 import com.prisma.librarymanagement.exception.OperationFailedException;
-import com.prisma.librarymanagement.exception.ResourceNotFoundException;
 import com.prisma.librarymanagement.utils.CsvUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
