@@ -32,7 +32,7 @@ class LibraryMemoryStorageTest {
     }
 
     @Test
-    public void whenSupplyUserCSVDataToUitls_ReturnsUserObjects() throws IOException {
+    public void whenSupplyUserCSVDataToUitls_ReturnsUserObjects()  {
         User testUser = new User();
         testUser.setName("Aexi");
         testUser.setFirstName("Liam");
@@ -44,7 +44,7 @@ class LibraryMemoryStorageTest {
     }
 
     @Test
-    public void whenSupplyBorrowerCSVDataToUitls_ReturnsBorrowerObjects() throws IOException {
+    public void whenSupplyBorrowerCSVDataToUitls_ReturnsBorrowerObjects()  {
         Borrower borrowerTest = new Borrower();
         borrowerTest.setUserName("Aexi,Liam");
         borrowerTest.setBookTitle("Complete Sherlock Holmes, The - Vol II");
@@ -54,7 +54,7 @@ class LibraryMemoryStorageTest {
         assertThat(library.getBorrowers()).contains(borrowerTest);
     }
     @Test
-    public void whenSupplyBookCSVDataToUitls_ReturnsBookObjects() throws IOException {
+    public void whenSupplyBookCSVDataToUitls_ReturnsBookObjects() {
         Book bookTest = new Book();
         bookTest.setAuthor("Drucker, Peter");
         bookTest.setTitle("Age of Discontuinity, The");

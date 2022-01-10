@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ResourceNotFoundException extends RuntimeException {
+public class OperationFailedException extends RuntimeException {
     private String message;
 }

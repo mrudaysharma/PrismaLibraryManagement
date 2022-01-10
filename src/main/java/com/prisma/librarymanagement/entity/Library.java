@@ -6,8 +6,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Library {
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Book> books;
     private List<User> users;
     private List<Borrower> borrowers;

@@ -4,7 +4,7 @@ import com.prisma.librarymanagement.entity.Book;
 import com.prisma.librarymanagement.entity.Borrower;
 import com.prisma.librarymanagement.entity.Library;
 import com.prisma.librarymanagement.entity.User;
-import com.prisma.librarymanagement.exception.ResourceNotFoundException;
+import com.prisma.librarymanagement.exception.OperationFailedException;
 import com.prisma.librarymanagement.utils.CsvUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -48,6 +48,10 @@ public class LibraryMemoryStorage {
                     library.setBorrowers(borrowers);
                 }
 
+            }
+            if(library==null)
+            {
+                throw new OperationFailedException("Failed to load CSV from resources");
             }
         return library;
     }
