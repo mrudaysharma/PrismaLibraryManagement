@@ -3,9 +3,11 @@ package com.prisma.librarymanagement.repository;
 import com.prisma.librarymanagement.entity.Borrower;
 import com.prisma.librarymanagement.entity.Library;
 import com.prisma.librarymanagement.entity.User;
+import com.prisma.librarymanagement.exception.DateFormatException;
 import com.prisma.librarymanagement.exception.NoBorrowerFoundException;
 import com.prisma.librarymanagement.exception.ResourceNotFoundException;
 import com.prisma.librarymanagement.memorystorage.LibraryMemoryStorage;
+import com.prisma.librarymanagement.utils.DateValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -55,6 +58,25 @@ public class LibraryManagementRepositoryImpl implements LibraryManagementReposit
         }
         return listUsersBorrowedBook;
 
+    }
+    @Override
+    public Set<User> getUserBorrowBookOnDate(String date) {
+        if(date.isBlank() || !date.matches(DateValidator.DATE_REGEX))
+        {
+            throw new DateFormatException("Date format is not MM/DD/YYYY");
+        }
+        List<Borrower> borrowers = library.get().getBorrowers();
+        List<User> users = library.get().getUsers();
+        Set<String> borrowersName = borrowers.stream().filter(borrower -> borrower.getUserName() != null && borrower.getBorrowedFrom().equals(date))
+                .map(borrower -> String.format("%s", borrower.getUserName()))
+                .collect(Collectors.toSet());
+
+        Set<User> borrowerUsers = users.stream().filter(user -> borrowersName.contains(user.getName()+","+user.getFirstName()))
+                .collect(Collectors.toSet());
+        if (borrowerUsers.isEmpty()) {
+            throw new NoBorrowerFoundException("Non of the User Borrowed Book On Given Date");
+        }
+        return borrowerUsers;
     }
 
     @PostConstruct

@@ -5,10 +5,11 @@ import com.prisma.librarymanagement.entity.Book;
 import com.prisma.librarymanagement.entity.Borrower;
 import com.prisma.librarymanagement.entity.Library;
 import com.prisma.librarymanagement.entity.User;
+import com.prisma.librarymanagement.exception.BadRequestException;
+import com.prisma.librarymanagement.exception.DateFormatException;
 import com.prisma.librarymanagement.memorystorage.LibraryMemoryStorage;
 import com.prisma.librarymanagement.repository.LibraryManagementRepositoryImpl;
 import com.prisma.librarymanagement.service.LibraryManagementService;
-import com.prisma.librarymanagement.utils.CsvUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +18,14 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -98,7 +98,7 @@ class LibrarymanagementApplicationTest {
     }
 
     @Test
-    public void whenRequestLibraryBorrower_thenResponseBorrowedAtlestOneBook() throws Exception {
+    public void whenRequestLibraryBorrower_thenResponseUserBorrowedAtlestOneBook() throws Exception {
         List<String> listOfUserBorrowedOneBookAtlast = new ArrayList<>(List.of("Chish,Elijah, Jayi,William, Zhungwang,Ava, Barret-Kingsley,Emma, Augusta,Olivia, Odum,Oliver, Zhungwang,Noah, Jumummaaq,James, Oomxii,Sophia, Ghaada,Charlotte, Aexi,Liam"));
 
         assertNotNull(library.getUsers());
@@ -106,5 +106,43 @@ class LibrarymanagementApplicationTest {
         mockMvc.perform(get(API_BASE_PATH_V1 + "/getUserAtleastBorrowOneBook")).andExpect(status().isOk());
         assertThat(libraryManagementService.getUserBorrowedOneBookAtleast()).isNotEmpty();
         assertThat(libraryManagementService.getUserBorrowedOneBookAtleast()).isEqualTo(listOfUserBorrowedOneBookAtlast);
+    }
+    @Test
+    public void whenRequestLibraryBorrower_thenResponseUserBorrowedBookOnDate() throws Exception {
+
+        String date = "06/23/2020";
+        User testUser = new User();
+        testUser.setName("Aexi");
+        testUser.setFirstName("Liam");
+        testUser.setMemberSince("01/01/2010");
+        testUser.setMemberTill("");
+        testUser.setGender('m');
+        Set<User> userList = new HashSet<>();
+        userList.add(testUser);
+
+        assertNotNull(library.getUsers());
+        when(libraryManagementRepository.getUserBorrowBookOnDate(date)).thenReturn(userList);
+        mockMvc.perform(get(API_BASE_PATH_V1 + "/getUserBorrowBookOnDate?date=06/23/2020")).andExpect(status().isOk());
+        assertThat(libraryManagementService.getUserBorrowBookOnDate(Optional.ofNullable(date))).isNotEmpty();
+        assertThat(libraryManagementService.getUserBorrowBookOnDate(Optional.ofNullable(date))).isEqualTo(userList);
+    }
+    @Test
+    public void whenWrongDateFormat_thenResponseBadRequestException() throws Exception {
+
+        String date = "23.06.2020";
+        User testUser = new User();
+        testUser.setName("Aexi");
+        testUser.setFirstName("Liam");
+        testUser.setMemberSince("01/01/2010");
+        testUser.setMemberTill("");
+        testUser.setGender('m');
+        Set<User> userList = new HashSet<>();
+        userList.add(testUser);
+
+        assertNotNull(library.getUsers());
+        when(libraryManagementRepository.getUserBorrowBookOnDate(date)).thenThrow(DateFormatException.class);
+        mockMvc.perform(get(API_BASE_PATH_V1 + "/getUserBorrowBookOnDate?date="+date))
+        .andExpect(status().isBadRequest())
+        .andExpect(result -> assertTrue(result.getResolvedException() instanceof DateFormatException));
     }
 }

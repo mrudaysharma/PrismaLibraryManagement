@@ -1,6 +1,8 @@
 package com.prisma.librarymanagement.service;
 
 import com.prisma.librarymanagement.entity.Library;
+import com.prisma.librarymanagement.entity.User;
+import com.prisma.librarymanagement.exception.BadRequestException;
 import com.prisma.librarymanagement.exception.NoBorrowerFoundException;
 import com.prisma.librarymanagement.exception.ResourceNotFoundException;
 import com.prisma.librarymanagement.repository.LibraryManagementRepository;
@@ -13,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Validated
@@ -37,6 +40,16 @@ public class LibraryManagementService {
             throw new NoBorrowerFoundException("Non of the User Borrowed Book");
         }
         return userListBorrowedBook;
+    }
+    public Set<User> getUserBorrowBookOnDate(Optional<String> date) {
+        if (date.isEmpty()) {
+            throw new BadRequestException("Date is Required to Fetch Borrower List");
+        }
+        Set<User> userListBorrowedBookOnDate = repository.getUserBorrowBookOnDate(date.get());
+        if (userListBorrowedBookOnDate.isEmpty()) {
+            throw new NoBorrowerFoundException("Non of the User Borrowed Book On Given Date");
+        }
+        return userListBorrowedBookOnDate;
     }
 
 }
