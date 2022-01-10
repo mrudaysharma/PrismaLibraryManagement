@@ -37,7 +37,7 @@ public class LibraryManagementController {
             if (library.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                LOGGER.info("Library Loaded " + library.toString());
+                LOGGER.info("Library Loaded %s", library.toString());
                 return new ResponseEntity<>(library.get(), HttpStatus.OK);
             }
         } catch (Exception e) {
@@ -54,7 +54,7 @@ public class LibraryManagementController {
             if (users.isEmpty()) {
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
             } else {
-                LOGGER.info("User List Borrowed Atleast One Book=====>" + users.toString());
+                LOGGER.info("User List Borrowed Atleast One Book %s", users.toString());
                 return new ResponseEntity(users, HttpStatus.OK);
             }
         } catch (Exception e) {
@@ -81,7 +81,7 @@ public class LibraryManagementController {
             if (users.isEmpty()) {
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
             } else {
-                LOGGER.info("User List Borrowed Atleast One Book=====>" + users.toString());
+                LOGGER.info("User List Borrowed Book On Given Date %s", users.toString());
                 return new ResponseEntity(users, HttpStatus.OK);
             }
         }
