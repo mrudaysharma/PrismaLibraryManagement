@@ -10,4 +10,5 @@ import java.util.Set;
 public interface LibraryManagementRepository {
     Optional<Library> getLibrary();
     List<String> getUserBorrowedOneBookAtleast();
+    public Set<User> getUserBorrowBookOnDate(String date);
 }
