@@ -22,7 +22,7 @@ We are aware that it is impossible to complete the task within this time frame.
 
 ## Enpoints
 
-- http://localhost:8080/getLibrary - Get Libarary
-- http://localhost:8080/getUserAtleastBorrowOneBook - Get Users who borrowed at least one book
-- http://localhost:8080/getUserBorrowBookOnDate?date=06/23/2020 - Get Users who borrowed book on given date 
+- http://localhost:8080/library/getLibrary - Get Libarary
+- http://localhost:8080/library/getUserAtleastBorrowOneBook - Get Users who borrowed at least one book
+- http://localhost:8080/library/getUserBorrowBookOnDate?date=06/23/2020 - Get Users who borrowed book on given date 
 
